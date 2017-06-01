@@ -17,6 +17,7 @@ let users = require('./routes/users');
 let chatRoute = require('./routes/chat');
 let loginRoute = require('./routes/login');
 let logoutRoute = require('./routes/logout');
+let personalRoute = require('./routes/personal');
 
 let app = express();
 
@@ -50,6 +51,7 @@ app.use('/users', users);
 app.use('/chat', chatRoute);
 app.use("/login", loginRoute);
 app.use("/logout", logoutRoute);
+app.use("/personal", personalRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

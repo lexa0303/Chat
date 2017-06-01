@@ -1,20 +1,24 @@
 <nav>
     <div class="container">
-        <div class="nav-wrapper">
-            <a href="javascript:void(0);" class="brand-logo center">Chat</a>
-            <ul class="left">
-                <li>
-                    <a target="_blank" href="https://github.com/lexa0303/Chat">Github</a>
-                </li>
-            </ul>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li>
+        <div class="row">
+            <div class="nav-wrapper">
+                <a href="/" class="brand-logo center">Chat</a>
+                <ul class="left">
+                    <li>
+                        <a target="_blank" href="https://github.com/lexa0303/Chat">Github</a>
+                    </li>
+                </ul>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <% if (user) { %>
-                        <a id="logout" href="/logout">Выйти</a>
-                    <% } else { %>
+                        <li>
+                            <a href="/personal">Personal</a>
+                        </li>
+                        <li>
+                            <a id="logout" href="/logout">Logout</a>
+                        </li>
                     <% } %>
-                </li>
-            </ul>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>

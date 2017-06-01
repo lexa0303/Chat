@@ -1,0 +1,26 @@
+<% layout('./layout/main') -%>
+
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="header center">
+                <h3>Personal</h3>
+            </div>
+            <form action="" id="personal_form">
+                <div class="input-field col s6 offset-s3">
+                    <input id="login" type="text" name="login" value="<%=user.login%>">
+                    <label for="login">Login</label>
+                </div>
+                <div class="file-field input-field col s6 offset-s3">
+                    <div class="btn">
+                        <span>Photo</span>
+                        <input type="file" name="photo" accept="image/jpeg, image/png, image/jpg">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" name="photo_name">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>

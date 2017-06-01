@@ -1,0 +1,34 @@
+<% layout('./layout/main') -%>
+
+<main>
+    <div class="container">
+        <div class="row">
+            <ul class="collection" id="messages"></ul>
+        </div>
+    </div>
+</main>
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <form action="" id="message_form">
+                <div class="col s9">
+                    <div class="input-field col s12">
+                        <input class="validate" required type="text" name="message" id="message">
+                        <label for="message">Message</label>
+                    </div>
+                    <button class="btn" type="submit">Send
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+                <div class="col s3">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input class="validate" required value="<%=user.login%>" type="text" name="user_name" id="user_name">
+                            <label for="user_name">Title</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</footer>

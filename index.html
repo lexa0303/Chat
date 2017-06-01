@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta name="viewport" width="device-width">
+    <title>Чат! Самый лучший!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons">
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+</head>
+<body>
+<main>
+    <div class="container">
+        <div class="row">
+            <ul class="collection" id="messages"></ul>
+        </div>
+    </div>
+</main>
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <form action="" id="message_form">
+                <div class="col s9">
+                    <div class="input-field col s12">
+                        <input class="validate" required type="text" name="message" id="message">
+                        <label for="message">Сообщение</label>
+                    </div>
+                    <button class="btn" type="submit">Отправить
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+                <div class="col s3">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input class="validate" required type="text" name="user_name" id="user_name">
+                            <label for="user_name">Ваше имя</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

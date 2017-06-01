@@ -5,6 +5,10 @@
 let Message = function(params, lastMessage){
     "use strict";
 
+    if (!params.date){
+        params.date = new Date();
+    }
+
     let messages = document.querySelector("#messages");
     let options = {
         hour: 'numeric',
@@ -39,12 +43,22 @@ let Message = function(params, lastMessage){
 
 let Chat = function(){
     "use strict";
+
+    let self = this;
+
+    this.socket = io.connect();
     this.messages = [];
     this.newMessages = [];
     this.defaultTitle = document.title;
 
     this.LoadHistory();
-    this.Subscribe();
+
+    console.log(this.socket);
+
+    this.socket.on("message", function(data){
+        "use strict";
+        self.NewMessage(data);
+    });
 
     setInterval(() => {
         this.CheckNewMessages();
@@ -77,29 +91,6 @@ Chat.prototype.CheckNewMessages = function(){
     }
 };
 
-Chat.prototype.Subscribe = function(){
-    "use strict";
-
-    let self = this;
-    let xhr = new XMLHttpRequest();
-
-    xhr.open("GET", "/chat/subscribe", true);
-
-    xhr.onload = function() {
-        let res = JSON.parse(this.responseText);
-        self.NewMessage(res);
-        self.Subscribe();
-    };
-
-    xhr.onerror = xhr.onabort = () => {
-        setTimeout(function(){
-            self.Subscribe()
-        }, 500);
-    };
-
-    xhr.send("");
-};
-
 Chat.prototype.LoadHistory = function(){
     "use strict";
 
@@ -119,6 +110,21 @@ Chat.prototype.LoadHistory = function(){
     xhr.send("");
 };
 
+Chat.prototype.Publish = function(data){
+    "use strict";
+
+    let self = this;
+    let result = {};
+
+    for(let obj of data){
+        result[obj[0]] = obj[1];
+    }
+
+    this.socket.emit("message", result, function(){
+        self.NewMessage(result);
+    });
+};
+
 let chat = new Chat();
 
 if (document.querySelector("#message_form")) {
@@ -127,11 +133,8 @@ if (document.querySelector("#message_form")) {
         e.preventDefault();
 
         let data = new FormData(this);
-        let xhr = new XMLHttpRequest();
 
-        xhr.open("POST", "/chat/publish", true);
-
-        xhr.send(data);
+        chat.Publish(data);
 
         this.elements.message.value = "";
 

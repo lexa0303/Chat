@@ -17,7 +17,6 @@ exports.subscribe = (req,res) => {
 exports.publish = (fields) => {
     "use strict";
 
-    fields.message = fields.message.pop();
     fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.jpg/g, ' <img src="http://$1.jpg"/>');
     fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.png/g, ' <img src="http://$1.png"/>');
     fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.jpeg/g, ' <img src="http://$1.jpeg"/>');
@@ -28,7 +27,7 @@ exports.publish = (fields) => {
 
     let data = {};
     data.message = fields.message;
-    data.author = fields.user_name.pop();
+    data.author = fields.author;
     data.date = new Date();
 
     historyRepository.add(data);
@@ -39,8 +38,6 @@ exports.publish = (fields) => {
     clients.forEach(function (res) {
         res.end(JSON.stringify(fields));
     });
-
-
 
     clients = [];
 };

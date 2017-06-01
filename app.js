@@ -11,6 +11,7 @@ let MongoStore = require("connect-mongo")(session);
 let functions = require("./functions");
 let config = require("./config");
 let mongoose = require('./db/connect');
+let Log = require("./lib/log")(module);
 
 let index = require('./routes/index');
 let users = require('./routes/users');
@@ -20,6 +21,10 @@ let logoutRoute = require('./routes/logout');
 let personalRoute = require('./routes/personal');
 
 let app = express();
+
+let server = require('http').createServer(app);
+
+require("./socket")(server);
 
 // view engine setup
 app.engine("ejs", require("ejs-locals"));
@@ -73,6 +78,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(process.env.PORT || config.get("port"));
+server.listen(process.env.PORT || config.get("port"));
 
 module.exports = app;

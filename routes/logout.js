@@ -10,8 +10,16 @@ let router = express.Router();
 router.post("", function(req, res, next){
     "use strict";
 
-    req.session.destroy();
-    res.redirect("/");
+    let sid = req.session.id;
+    let io = req.app.get("io");
+
+    io.sockets._events.sessreload(sid, function(){
+        req.session.destroy(function(err){
+            if (err) return next(err);
+        });
+    });
+
+    res.send("");
 });
 
 module.exports = router;

@@ -24,7 +24,9 @@ let app = express();
 
 let server = require('http').createServer(app);
 
-require("./socket")(server);
+let io = require("./socket")(server);
+app.set("io", io);
+
 
 // view engine setup
 app.engine("ejs", require("ejs-locals"));
@@ -53,6 +55,7 @@ app.use(function(req, res, next){
     next();
 });
 app.use(require("./middleware/loaduser"));
+app.use(require("./middleware/checkAuth"));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);

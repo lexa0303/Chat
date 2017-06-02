@@ -28,7 +28,7 @@ module.exports = function(server) {
         sessionStore.load(sid, function(err, session){
              if (err) throw new Error(err);
 
-             if (!session) throw new Error(401, "No session");
+             if (!session) return null;
 
              handshake.session = session;
 
@@ -53,12 +53,45 @@ module.exports = function(server) {
         });
     });
 
+    io.sockets.on("sessreload", function(sid, next){
+        "use strict";
+        let clients = io.clients().sockets;
+
+        for (let i in clients){
+            if (clients.hasOwnProperty(i)){
+                let client = clients[i];
+
+                if (client.request.session.id === sid) {
+                    console.log(client);
+
+                    sessionStore.load(sid, function (err, session) {
+                        if (err) {
+                            client.emit("error", "Server error");
+                            client.disconnect();
+                            return;
+                        }
+
+                        if (!session) {
+                            client.emit("error", "No session");
+                            client.disconnect();
+                            return;
+                        }
+
+                        client.request.session = session;
+
+                        next();
+                    });
+                }
+            }
+        }
+    });
+
     io.sockets.on("connection", function (socket) {
         "use strict";
 
         let user = socket.request.user;
 
-        socket.broadcast.emit("join", user.login);
+        socket.broadcast.emit("join", {user: user.login, date: new Date()});
 
         socket.on("message", function (fields) {
             chat.publish(fields, user, function(result){
@@ -68,7 +101,9 @@ module.exports = function(server) {
         });
 
         socket.on("disconnect", function(){
-            socket.broadcast.emit("leave", user.login);
-        })
+            socket.broadcast.emit("leave", {user: user.login, date: new Date()});
+        });
     });
+
+    return io;
 };

@@ -21,7 +21,7 @@ router.post("", function(req, res, next){
         if (err){
             res.statusCode = 400;
             console.log(err);
-            res.end("Error");
+            res.send("Error");
         } else {
 
         }

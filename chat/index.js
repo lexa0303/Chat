@@ -14,32 +14,25 @@ exports.subscribe = (req,res) => {
     })
 };
 
-exports.publish = (fields) => {
+exports.publish = (fields, user, callback) => {
     "use strict";
 
-    fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.jpg/g, ' <img src="http://$1.jpg"/>');
-    fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.png/g, ' <img src="http://$1.png"/>');
-    fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.jpeg/g, ' <img src="http://$1.jpeg"/>');
-    fields.message = fields.message.replace(/[\s]https:\/\/([\S]*)\.jpg/g, ' <img src="https://$1.jpg"/>');
-    fields.message = fields.message.replace(/[\s]https:\/\/([\S]*)\.png/g, ' <img src="https://$1.png"/>');
-    fields.message = fields.message.replace(/[\s]https:\/\/([\S]*)\.jpeg/g, ' <img src="https://$1.jpeg"/>');
-    fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)/g, ' <a target="_blank" href="https://$1">$1</a>');
+    // fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.jpg/g, ' <img src="http://$1.jpg"/>');
+    // fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.png/g, ' <img src="http://$1.png"/>');
+    // fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.jpeg/g, ' <img src="http://$1.jpeg"/>');
+    // fields.message = fields.message.replace(/[\s]https:\/\/([\S]*)\.jpg/g, ' <img src="https://$1.jpg"/>');
+    // fields.message = fields.message.replace(/[\s]https:\/\/([\S]*)\.png/g, ' <img src="https://$1.png"/>');
+    // fields.message = fields.message.replace(/[\s]https:\/\/([\S]*)\.jpeg/g, ' <img src="https://$1.jpeg"/>');
+    // fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)/g, ' <a target="_blank" href="https://$1">$1</a>');
 
     let data = {};
     data.message = fields.message;
-    data.author = fields.author;
+    data.author = user.login;
     data.date = new Date();
 
     historyRepository.add(data);
 
-    fields.date = data.date;
-    fields.author = data.author;
-
-    clients.forEach(function (res) {
-        res.end(JSON.stringify(fields));
-    });
-
-    clients = [];
+    callback(data);
 };
 
 exports.history = (req, res) => {

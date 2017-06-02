@@ -2,14 +2,9 @@
  * Created by alex on 29.05.17.
  */
 
-let Message = function(params, lastMessage){
+let Message = function(params, messages, lastMessage){
     "use strict";
 
-    if (!params.date){
-        params.date = new Date();
-    }
-
-    let messages = document.querySelector("#messages");
     let options = {
         hour: 'numeric',
         minute: 'numeric',
@@ -41,6 +36,10 @@ let Message = function(params, lastMessage){
     return li;
 };
 
+let SystemMessage = function(params, lastMessage){
+    "use strict";
+
+};
 let Chat = function(){
     "use strict";
 
@@ -50,6 +49,8 @@ let Chat = function(){
     this.messages = [];
     this.newMessages = [];
     this.defaultTitle = document.title;
+    this.wrapper = document.querySelector("#messages");
+
 
     this.LoadHistory();
 
@@ -65,7 +66,7 @@ let Chat = function(){
 
 Chat.prototype.NewMessage = function(res){
     "use strict";
-    let newMessage = new Message(res, this.lastMessage);
+    let newMessage = new Message(res, this.wrapper, this.lastMessage);
     this.lastMessage = newMessage;
 
     this.messages.push(newMessage);
@@ -106,6 +107,8 @@ Chat.prototype.LoadHistory = function(){
     };
 
     xhr.send("");
+
+    self.newMessages = [];
 };
 
 Chat.prototype.Publish = function(data){
@@ -119,10 +122,6 @@ Chat.prototype.Publish = function(data){
     }
 
     this.socket.emit("message", result);
-
-    result.date = new Date();
-
-    self.NewMessage(result);
 };
 
 let chat = new Chat();

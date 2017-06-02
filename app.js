@@ -37,11 +37,14 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+let sessionStore = require("./lib/sessionStore");
+
 app.use(session({
     secret: config.get("session:secret"),
     key: config.get("session:key"),
     cookie: config.get("session:cookie"),
-    store: new MongoStore({mongooseConnection: mongoose.connection, collection: "sessions", adapter: "connect-mongo"})
+    store: sessionStore
 }));
 
 app.use(function(req, res, next){

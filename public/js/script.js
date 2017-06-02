@@ -53,8 +53,6 @@ let Chat = function(){
 
     this.LoadHistory();
 
-    console.log(this.socket);
-
     this.socket.on("message", function(data){
         "use strict";
         self.NewMessage(data);
@@ -120,9 +118,11 @@ Chat.prototype.Publish = function(data){
         result[obj[0]] = obj[1];
     }
 
-    this.socket.emit("message", result, function(){
-        self.NewMessage(result);
-    });
+    this.socket.emit("message", result);
+
+    result.date = new Date();
+
+    self.NewMessage(result);
 };
 
 let chat = new Chat();
@@ -154,14 +154,7 @@ if (document.querySelector("#authorize")) {
 
         xhr.onload = function (e) {
             if (xhr.status === 200) {
-                try {
-                    // let result = JSON.parse(this.responseText);
-                    // if (result.status === "ok"){
-                    //     location.reload();
-                    // }
-                } catch (err) {
-                    console.log(err);
-                }
+                location.reload();
             } else {
                 Materialize.toast("Error");
             }

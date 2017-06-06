@@ -6,9 +6,8 @@ let Users = require("../repositories/user");
 
 module.exports = function(req, res, next){
     "use strict";
-    console.log(req.session);
     if (!req.session.user) {
-        if (req.url !== "/"){
+        if (req.url !== "/" && req.method === "GET"){
             res.send(403, "Forbidden");
         } else {
             next();

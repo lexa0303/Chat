@@ -21,9 +21,7 @@ let logoutRoute = require('./routes/logout');
 let personalRoute = require('./routes/personal');
 
 let app = express();
-
 let server = require('http').createServer(app);
-
 let io = require("./socket")(server);
 app.set("io", io);
 
@@ -39,6 +37,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
 let sessionStore = require("./lib/sessionStore");
 
@@ -54,9 +53,10 @@ app.use(function(req, res, next){
     req.session.numberOfVisits = req.session.numberOfVisits + 1 || 1;
     next();
 });
+
 app.use(require("./middleware/loaduser"));
 app.use(require("./middleware/checkAuth"));
-app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/', index);
 app.use('/users', users);
 app.use('/chat', chatRoute);

@@ -63,6 +63,32 @@ let SystemMessage = function(params, messages, lastMessage){
 
     return li;
 };
+let DateMessage = function(params, messages, lastMessage){
+    "use strict";
+
+    let options = {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric'
+    };
+
+    let li = document.createElement('li');
+    li.classList.add("collection-item");
+    li.classList.add("date");
+    let text = document.createElement("span");
+    text.innerHTML = params.date.toLocaleString("ru", options);
+    li.appendChild(text);
+
+    if (lastMessage) {
+        messages.insertBefore(li, lastMessage);
+    } else {
+        messages.appendChild(li);
+    }
+
+    console.log(li);
+    return li;
+};
 let Chat = function(){
     "use strict";
 
@@ -103,16 +129,23 @@ let Chat = function(){
 
 Chat.prototype.NewMessage = function(res, system = false){
     let newMessage;
+    let date = new Date(Date.parse(res.date));
+
+    if (this.lastMessageDate !== undefined && date.getDay() !== this.lastMessageDate.getDay()){
+        newMessage = new DateMessage({date:this.lastMessageDate}, this.wrapper, this.lastMessage);
+        this.lastMessage = newMessage;
+    }
 
     if (!system) {
         newMessage = new Message(res, this.wrapper, this.lastMessage);
+        this.messages.push(newMessage);
+        this.newMessages.push(newMessage);
     } else {
         newMessage = new SystemMessage(res, this.wrapper, this.lastMessage);
     }
-    this.lastMessage = newMessage;
 
-    this.messages.push(newMessage);
-    this.newMessages.push(newMessage);
+    this.lastMessageDate = date;
+    this.lastMessage = newMessage;
 };
 
 Chat.prototype.CheckNewMessages = function(){

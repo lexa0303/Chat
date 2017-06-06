@@ -19,7 +19,15 @@ header{
 main{
     z-index: 1;
     padding-top:65px;
+    padding-bottom: 150px;
 }
 #message_form{
     padding-top: 10px;
+}
+.collection-item.date{
+    text-align: center;
+    background-color: lightgray;
+}
+.collection-item.date:first-letter {
+    text-transform: capitalize;
 }

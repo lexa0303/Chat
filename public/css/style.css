@@ -1,4 +1,4 @@
-.footer{
+footer{
     width:100%;
     position:fixed;
     bottom:0;
@@ -8,8 +8,17 @@
     min-height: 140px;
     border-top: 1px solid #e0e0e0;
 }
-.main{
+header{
+    width:100%;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:10;
+    height: 65px;
+}
+main{
     z-index: 1;
+    padding-top:65px;
 }
 #message_form{
     padding-top: 10px;

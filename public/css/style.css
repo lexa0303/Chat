@@ -31,3 +31,7 @@ main{
 .collection-item.date:first-letter {
     text-transform: capitalize;
 }
+#history_loader{
+    margin:0;
+    display:none;
+}

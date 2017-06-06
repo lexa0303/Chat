@@ -5,7 +5,12 @@
 let historyRepository = require("../repositories/history");
 let clients = [];
 
-exports.subscribe = (req,res) => {
+let chat = function(){
+    "use strict";
+
+};
+
+chat.prototype.subscribe = function(req,res) {
     "use strict";
     clients.push(res);
 
@@ -14,7 +19,7 @@ exports.subscribe = (req,res) => {
     })
 };
 
-exports.publish = (fields, user, callback) => {
+chat.prototype.publish =  function(fields, user, callback) {
     "use strict";
 
     // fields.message = fields.message.replace(/[\s]http:\/\/([\S]*)\.jpg/g, ' <img src="http://$1.jpg"/>');
@@ -35,12 +40,14 @@ exports.publish = (fields, user, callback) => {
     callback(data);
 };
 
-exports.history = (req, res) => {
+chat.prototype.history = function(req, res) {
     "use strict";
 
     let filter = {
 
     };
+
+    let offset = req.body.offset;
 
     let options = {
         hour: 'numeric',
@@ -48,10 +55,12 @@ exports.history = (req, res) => {
         second: 'numeric'
     };
 
-    historyRepository.get(filter, (err, data) => {
+    historyRepository.get(filter, {date:-1}, 20, offset, (err, data) => {
         res.end(JSON.stringify(data));
     });
 };
+
+module.exports = new chat;
 
 // setInterval(()=>{
 //     "use strict";

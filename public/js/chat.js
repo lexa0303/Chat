@@ -2,8 +2,12 @@
  * Created by alex on 02.06.17.
  */
 
-let Message = function(params, messages, lastMessage){
+let Message = function(params, messages, lastMessage, toEnd){
     "use strict";
+
+    if (toEnd === undefined){
+        toEnd = false;
+    }
 
     let options = {
         hour: 'numeric',
@@ -27,7 +31,7 @@ let Message = function(params, messages, lastMessage){
     date.innerHTML = new Date(Date.parse(params.date)).toLocaleString("ru", options);
     li.appendChild(date);
 
-    if (lastMessage) {
+    if (lastMessage && !toEnd) {
         messages.insertBefore(li, lastMessage);
     } else {
         messages.appendChild(li);
@@ -35,8 +39,12 @@ let Message = function(params, messages, lastMessage){
 
     return li;
 };
-let SystemMessage = function(params, messages, lastMessage){
+let SystemMessage = function(params, messages, lastMessage, toEnd){
     "use strict";
+
+    if (toEnd === undefined){
+        toEnd = false;
+    }
 
     let options = {
         hour: 'numeric',
@@ -55,7 +63,7 @@ let SystemMessage = function(params, messages, lastMessage){
     date.innerHTML = new Date(Date.parse(params.date)).toLocaleString("ru", options);
     li.appendChild(date);
 
-    if (lastMessage) {
+    if (lastMessage && !toEnd) {
         messages.insertBefore(li, lastMessage);
     } else {
         messages.appendChild(li);
@@ -63,8 +71,12 @@ let SystemMessage = function(params, messages, lastMessage){
 
     return li;
 };
-let DateMessage = function(params, messages, lastMessage){
+let DateMessage = function(params, messages, lastMessage, toEnd){
     "use strict";
+
+    if (toEnd === undefined){
+        toEnd = false;
+    }
 
     let options = {
         weekday: 'long',
@@ -80,7 +92,7 @@ let DateMessage = function(params, messages, lastMessage){
     text.innerHTML = params.date.toLocaleString("ru", options);
     li.appendChild(text);
 
-    if (lastMessage) {
+    if (lastMessage && !toEnd) {
         messages.insertBefore(li, lastMessage);
     } else {
         messages.appendChild(li);
@@ -94,54 +106,71 @@ let Chat = function(){
 
     let self = this;
 
-    this.socket = io.connect();
-    this.messages = [];
-    this.newMessages = [];
-    this.defaultTitle = document.title;
-    this.wrapper = document.querySelector("#messages");
+    self.socket = io.connect();
+    self.messages = [];
+    self.newMessages = [];
+    self.defaultTitle = document.title;
+    self.wrapper = document.querySelector("#messages");
+    self.loader = document.querySelector("#history_loader");
 
+    self.LoadHistory();
 
-    this.LoadHistory();
-
-    this.socket.on("message", function(data){
+    self.socket.on("message", function(data){
         "use strict";
         self.NewMessage(data);
     });
 
-    this.socket.on("join", function(data){
+    self.socket.on("join", function(data){
         let message = `${data.user} входит в чат`;
         self.NewMessage({message: message, date: data.date}, true);
     });
 
-    this.socket.on("leave", function(data){
+    self.socket.on("leave", function(data){
         let message = `${data.user} выходит из чата`;
         self.NewMessage({message: message, date: data.date}, true);
     });
 
-    this.socket.on("error", function(data){
+    self.socket.on("error", function(data){
         Materialize.toast(data);
     });
 
+    document.addEventListener("scroll", function(e){
+        if ((document.body.clientHeight - window.innerHeight - 500) < document.body.scrollTop){
+            if (!self.historyLoading) {
+                self.LoadHistory();
+            }
+        }
+    });
+
     setInterval(() => {
-        this.CheckNewMessages();
+        self.CheckNewMessages();
     }, 500);
 };
 
-Chat.prototype.NewMessage = function(res, system = false){
+Chat.prototype.NewMessage = function(res, system, toEnd){
+    "use strict";
+
+    if(system === undefined){
+        system = false;
+    }
+    if(toEnd === undefined){
+        toEnd = false;
+    }
+
     let newMessage;
     let date = new Date(Date.parse(res.date));
 
     if (this.lastMessageDate !== undefined && date.getDay() !== this.lastMessageDate.getDay()){
-        newMessage = new DateMessage({date:this.lastMessageDate}, this.wrapper, this.lastMessage);
+        newMessage = new DateMessage({date:this.lastMessageDate}, this.wrapper, this.lastMessage, toEnd);
         this.lastMessage = newMessage;
     }
 
     if (!system) {
-        newMessage = new Message(res, this.wrapper, this.lastMessage);
+        newMessage = new Message(res, this.wrapper, this.lastMessage, toEnd);
         this.messages.push(newMessage);
         this.newMessages.push(newMessage);
     } else {
-        newMessage = new SystemMessage(res, this.wrapper, this.lastMessage);
+        newMessage = new SystemMessage(res, this.wrapper, this.lastMessage, toEnd);
     }
 
     this.lastMessageDate = date;
@@ -167,21 +196,40 @@ Chat.prototype.CheckNewMessages = function(){
 
 Chat.prototype.LoadHistory = function(){
     "use strict";
-
     let self = this;
     let xhr = new XMLHttpRequest();
+    self.historyLoading = true;
+    self.loader.style.display = "block";
 
     xhr.open("POST", "/chat/history", true);
 
+    xhr.setRequestHeader("Content-type", "application/json");
     xhr.onload = function(){
         let res = JSON.parse(this.responseText);
 
+        let msgs = document.querySelectorAll(".collection-item");
+        self.lastMessage = msgs[msgs.length - 1];
+
         for (let i = 0, n = res.length; i < n; i++){
-            self.NewMessage(res[i]);
+            self.NewMessage(res[i], false, true);
         }
+
+        if(msgs[0] !== undefined) {
+            self.lastMessage = msgs[0];
+        } else {
+            msgs = document.querySelectorAll(".collection-item");
+            self.lastMessage = msgs[0];
+        }
+
+        self.historyLoading = false;
+        self.loader.style.display = "none";
     };
 
-    xhr.send("");
+    let data = {
+        offset: self.messages.length
+    };
+
+    xhr.send(JSON.stringify(data));
 
     self.newMessages = [];
 };

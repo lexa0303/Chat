@@ -29,9 +29,9 @@ Repository.prototype.getAll = function(callback){
     query.exec(callback);
 };
 
-Repository.prototype.get = function(filter, callback){
+Repository.prototype.get = function(filter, sort, limit, offset, callback){
     let model = this.model;
-    let query = model.find(filter);
+    let query = model.find(filter).sort(sort).limit(limit).skip(offset);
     query.exec(callback);
 };
 

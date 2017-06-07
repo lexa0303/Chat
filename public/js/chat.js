@@ -150,11 +150,8 @@ let Chat = function(){
     document.addEventListener("click", function(e){
         let target = e.target;
 
-        console.log(target);
-
         if (target.classList.contains("js-emoji")){
             self.message_input.value = self.message_input.value + target.dataset.value;
-            console.log(123);
         }
     });
 

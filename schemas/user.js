@@ -29,6 +29,12 @@ let userSchema = new Schema({
     created:{
         type: Date,
         default: Date.now
+    },
+    photo:{
+        data: Buffer,
+        name: String,
+        type: String,
+        contentType: String
     }
 });
 

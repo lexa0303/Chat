@@ -4,6 +4,7 @@
 
 let Repository = require('./main');
 let User = require('../schemas/user');
+let fs = require('fs');
 
 function UserRepository() {
     Repository.prototype.constructor.call(this);
@@ -35,6 +36,51 @@ UserRepository.prototype.authorize = function(login, password, next){
             });
         }
     });
+};
+
+UserRepository.prototype.edit = function(userId, fields, files, callback){
+    "use strict";
+
+    let Users = this;
+
+    Users.getById(userId, function(err, user){
+        if (err) return callback(err);
+
+        let oldUser = user;
+
+        for (let i in fields){
+            if (fields.hasOwnProperty(i)){
+                if (user[i] !== undefined){
+                    if (typeof fields[i] === 'object'){
+                        user[i] = fields[i].pop();
+                    } else {
+                        user[i] = fields[i];
+                    }
+                }
+            }
+        }
+
+        for (let i in files){
+            if (files.hasOwnProperty(i)){
+                if (user[i] !== undefined){
+                    let file;
+                    if (typeof files[i] === 'object'){
+                        file = files[i].pop();
+                    } else {
+                        file = files[i];
+                    }
+
+                    user.photo.data = fs.readFileSync(file.path);
+                    user.photo.name = file.originalFilename;
+                    user.photo.type = file.headers['content-type'];
+                }
+            }
+        }
+
+        Users.update(userId, user);
+    });
+
+    callback(null);
 };
 
 module.exports = new UserRepository();

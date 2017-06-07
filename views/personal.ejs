@@ -6,12 +6,13 @@
             <div class="header center">
                 <h3>Personal</h3>
             </div>
-            <form action="" id="personal_form">
-                <div class="input-field col s8 offset-s2 m6 offset-m3">
+            <img src="data:image/png;base64<%= user.personal_photo %>" alt="">
+            <form action="" id="personal_form" class="col s8 offset-s2 m6 offset-m3">
+                <div class="input-field col s12">
                     <input id="login" type="text" name="login" value="<%=user.login%>">
                     <label for="login">Login</label>
                 </div>
-                <div class="file-field input-field col s8 offset-s2 m6 offset-m3">
+                <div class="file-field input-field col s12">
                     <div class="btn">
                         <span>Photo</span>
                         <input type="file" name="photo" accept="image/jpeg, image/png, image/jpg">
@@ -20,7 +21,12 @@
                         <input class="file-path validate" type="text" name="photo_name">
                     </div>
                 </div>
+                <div class="col s12 center">
+                    <button class="btn-large">Save</button>
+                </div>
             </form>
         </div>
     </div>
 </main>
+
+<script src="/js/personal.js"></script>

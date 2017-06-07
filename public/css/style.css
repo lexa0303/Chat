@@ -51,3 +51,6 @@ main{
     border-bottom: 1px solid lightgrey;
     padding-bottom: 10px;
 }
+.side-nav {
+    width: 250px;
+}

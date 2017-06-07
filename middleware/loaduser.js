@@ -13,6 +13,7 @@ module.exports = function(req, res, next){
         if (err) return next(err);
 
         req.user = res.locals.user = user;
+        // req.user.personal_photo = new Buffer(req.user.photo.data).toString('base64');
         next();
     });
 };

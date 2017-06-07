@@ -8,7 +8,7 @@ module.exports = function(req, res, next){
     "use strict";
     if (!req.session.user) {
         if (req.url !== "/" && req.method === "GET"){
-            res.send(403, "Forbidden");
+            res.redirect("/");
         } else {
             next();
         }

@@ -20,10 +20,13 @@ router.post("", function(req, res, next){
     form.parse(req, function(err, fields, files) {
         if (err){
             res.statusCode = 400;
-            console.log(err);
             res.send("Error");
         } else {
+            Users.edit(req.session.user, fields, files, function(err){
+                if (err) return next(err);
 
+                res.send("");
+            });
         }
     });
 });

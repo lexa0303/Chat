@@ -18,7 +18,6 @@ header{
 }
 main{
     z-index: 1;
-    padding-top:65px;
     padding-bottom: 150px;
 }
 #message_form{
@@ -47,4 +46,8 @@ main{
 }
 .emoji-outer{
     pointer-events: none;
+}
+.side-nav .userView{
+    border-bottom: 1px solid lightgrey;
+    padding-bottom: 10px;
 }

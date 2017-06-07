@@ -38,3 +38,5 @@ document.addEventListener("click", function(e){
         xhr.send("");
     }
 });
+
+$(".button-collapse").sideNav();

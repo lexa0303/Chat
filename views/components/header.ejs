@@ -1,4 +1,5 @@
-<header class="header">
+<!--<header class="header">-->
+<div class="navbar-fixed">
     <nav>
         <div class="container">
             <div class="row">
@@ -9,7 +10,13 @@
                             <a target="_blank" href="https://github.com/lexa0303/Chat">Github</a>
                         </li>
                     </ul>
-                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <% if (user) { %>
+                        <a href="javascript:void(0)" data-activates="nav-mobile"
+                           class="button-collapse top-nav full hide-on-large-only right">
+                            <i class="material-icons">menu</i>
+                        </a>
+                    <%}%>
+                    <ul id="nav" class="right hide-on-med-and-down">
                         <% if (user) { %>
                         <li>
                             <a href="/personal">Personal</a>
@@ -23,4 +30,27 @@
             </div>
         </div>
     </nav>
-</header>
+</div>
+<% if (user) { %>
+    <ul id="nav-mobile" class="side-nav">
+        <li>
+            <div class="userView">
+                <div class="background">
+                    <img src="">
+                </div>
+                <a href="/personal">
+                    <img class="circle" src="">
+                </a>
+                <a href="/personal">
+                    <span class="name"><%=user.login%></span>
+                </a>
+            </div>
+        </li>
+        <li>
+            <a id="logout" href="/logout">Logout</a>
+        </li>
+    </ul>
+<% } %>
+
+
+<!--</header>-->

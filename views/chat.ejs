@@ -19,9 +19,22 @@
                         <input class="validate" required type="text" name="message" id="message">
                         <label for="message">Message</label>
                     </div>
-                    <button class="btn" type="submit">Send
-                        <i class="material-icons right">send</i>
-                    </button>
+                    <div class="col s2">
+                        <button class="btn" type="submit">Send
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                    <div class="col s10">
+                        <div class="stickers_wrap">
+                            <% for (var i in emoji){
+                                if (emoji.hasOwnProperty(i)){%>
+                                <a class="sticker js-emoji"
+                                   data-value="<%=emoji[i]%>"
+                                   href="javascript:void(0);"><%=emoji[i]%></a>
+                                <%}
+                            }%>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

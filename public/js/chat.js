@@ -98,7 +98,6 @@ let DateMessage = function(params, messages, lastMessage, toEnd){
         messages.appendChild(li);
     }
 
-    console.log(li);
     return li;
 };
 let Chat = function(){
@@ -112,6 +111,8 @@ let Chat = function(){
     self.defaultTitle = document.title;
     self.wrapper = document.querySelector("#messages");
     self.loader = document.querySelector("#history_loader");
+    self.form = document.querySelector("#message_form");
+    self.message_input = document.querySelector("#message");
 
     self.LoadHistory();
 
@@ -134,12 +135,38 @@ let Chat = function(){
         Materialize.toast(data);
     });
 
+    self.socket.on("stickers", function(data){
+        console.log(data);
+    });
+
     document.addEventListener("scroll", function(e){
         if ((document.body.clientHeight - window.innerHeight - 500) < document.body.scrollTop){
             if (!self.historyLoading) {
                 self.LoadHistory();
             }
         }
+    });
+
+    document.addEventListener("click", function(e){
+        let target = e.target;
+
+        console.log(target);
+
+        if (target.classList.contains("js-emoji")){
+            self.message_input.value = self.message_input.value + target.dataset.value;
+            console.log(123);
+        }
+    });
+
+    self.form.addEventListener("submit", function (e) {
+        "use strict";
+        e.preventDefault();
+        let data = new FormData(this);
+
+        chat.Publish(data);
+
+        this.elements.message.value = "";
+        return false;
     });
 
     setInterval(() => {
@@ -248,18 +275,3 @@ Chat.prototype.Publish = function(data){
 };
 
 let chat = new Chat();
-
-if (document.querySelector("#message_form")) {
-    document.querySelector("#message_form").addEventListener("submit", function (e) {
-        "use strict";
-        e.preventDefault();
-
-        let data = new FormData(this);
-
-        chat.Publish(data);
-
-        this.elements.message.value = "";
-
-        return false;
-    });
-}

@@ -6,6 +6,14 @@ let express = require('express');
 let router = express.Router();
 let chat = require("../chat");
 let multiparty = require("multiparty");
+const emojiStickers = require("../config/emoji");
+
+router.get('/', function(req, res, next){
+    "use strict";
+    res.render('chat', {
+        emoji: emojiStickers.stores.emoji.store
+    });
+});
 
 /* GET home page. */
 router.post('/history', function(req, res, next) {

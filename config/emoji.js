@@ -1,5 +1,5 @@
 /**
- * Created by alex on 31.05.17.
+ * Created by alex on 07.06.17.
  */
 
 let nconf = require("nconf");
@@ -7,6 +7,6 @@ let path = require("path");
 
 nconf.argv()
     .env()
-    .file("file", path.join(__dirname, 'config.json'));
+    .file("emoji", path.join(__dirname, 'emoji.json'));
 
 module.exports = nconf;

@@ -4,9 +4,17 @@
 
 let historyRepository = require("../repositories/history");
 let clients = [];
+const emoji = require("node-emoji");
 
 let chat = function(){
     "use strict";
+
+
+};
+
+chat.prototype.onConnect = function(user, callback){
+    "use strict";
+
 
 };
 

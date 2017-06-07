@@ -35,3 +35,16 @@ main{
     margin:0;
     display:none;
 }
+.sticker{
+    display: inline-block;
+}
+.stickers_wrap{
+    height: 100px;
+    overflow-y: scroll;
+}
+.emoji-inner{
+    pointer-events: none;
+}
+.emoji-outer{
+    pointer-events: none;
+}

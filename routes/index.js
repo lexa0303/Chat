@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
     if (req.user){
-        res.render('chat', {});
+        res.redirect("/chat");
     } else {
         res.render('auth', {});
     }

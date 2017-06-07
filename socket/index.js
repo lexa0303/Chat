@@ -62,8 +62,6 @@ module.exports = function(server) {
                 let client = clients[i];
 
                 if (client.request.session.id === sid) {
-                    console.log(client);
-
                     sessionStore.load(sid, function (err, session) {
                         if (err) {
                             client.emit("error", "Server error");
@@ -90,6 +88,10 @@ module.exports = function(server) {
         "use strict";
 
         let user = socket.request.user;
+
+        chat.onConnect(user, function(){
+
+        });
 
         socket.broadcast.emit("join", {user: user.login, date: new Date()});
 

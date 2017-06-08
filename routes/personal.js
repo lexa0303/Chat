@@ -25,7 +25,7 @@ router.post("", function(req, res, next){
             Users.edit(req.session.user, fields, files, function(err){
                 if (err) return next(err);
 
-                res.send("");
+                res.redirect(req.path);
             });
         }
     });

@@ -6,8 +6,10 @@
             <div class="header center">
                 <h3>Personal</h3>
             </div>
-            <img src="data:image/png;base64<%= user.personal_photo %>" alt="">
             <form action="" id="personal_form" class="col s8 offset-s2 m6 offset-m3">
+                <div class="personal_image center col s12">
+                    <img src="data:<%=user.photo_type%>;base64,<%= user.personal_photo %>" alt="">
+                </div>
                 <div class="input-field col s12">
                     <input id="login" type="text" name="login" value="<%=user.login%>">
                     <label for="login">Login</label>
@@ -18,7 +20,9 @@
                         <input type="file" name="photo" accept="image/jpeg, image/png, image/jpg">
                     </div>
                     <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" name="photo_name">
+                        <input class="file-path validate"
+                               type="text"
+                               name="photo_name">
                     </div>
                 </div>
                 <div class="col s12 center">

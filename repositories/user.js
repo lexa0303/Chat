@@ -70,9 +70,11 @@ UserRepository.prototype.edit = function(userId, fields, files, callback){
                         file = files[i];
                     }
 
-                    user.photo.data = fs.readFileSync(file.path);
-                    user.photo.name = file.originalFilename;
-                    user.photo.type = file.headers['content-type'];
+                    if (file.originalFilename) {
+                        user.photo.data = fs.readFileSync(file.path);
+                        user.photo_name = file.originalFilename;
+                        user.photo_type = file.headers['content-type'];
+                    }
                 }
             }
         }

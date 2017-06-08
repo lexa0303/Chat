@@ -21,10 +21,6 @@ let logoutRoute = require('./routes/logout');
 let personalRoute = require('./routes/personal');
 
 let app = express();
-let server = require('http').createServer(app);
-let io = require("./socket")(server);
-app.set("io", io);
-
 
 // view engine setup
 app.engine("ejs", require("ejs-locals"));
@@ -56,6 +52,10 @@ app.use(function(req, res, next){
 
 app.use(require("./middleware/loaduser"));
 app.use(require("./middleware/checkAuth"));
+
+let server = require('http').createServer(app);
+let io = require("./socket")(server);
+app.set("io", io);
 
 app.use('/', index);
 app.use('/users', users);

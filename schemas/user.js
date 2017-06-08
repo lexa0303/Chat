@@ -26,15 +26,21 @@ let userSchema = new Schema({
         type: String,
         required: true
     },
+    photo:{
+        data: {
+            type: Buffer,
+            contentType: String
+        }
+    },
+    photo_name: {
+        type: String
+    },
+    photo_type: {
+        type: String
+    },
     created:{
         type: Date,
         default: Date.now
-    },
-    photo:{
-        data: Buffer,
-        name: String,
-        type: String,
-        contentType: String
     }
 });
 

@@ -113,6 +113,7 @@ let Chat = function(){
     self.loader = document.querySelector("#history_loader");
     self.form = document.querySelector("#message_form");
     self.message_input = document.querySelector("#message");
+    self.clients = {};
 
     self.LoadHistory();
 
@@ -124,6 +125,14 @@ let Chat = function(){
     self.socket.on("join", function(data){
         let message = `${data.user} входит в чат`;
         self.NewMessage({message: message, date: data.date}, true);
+        let newClient = {
+            login: data.user,
+            photo: {
+                src: data.photo,
+                type: data.photo_type
+            }
+        };
+        self.clients[newClient.login] = newClient;
     });
 
     self.socket.on("leave", function(data){
@@ -133,10 +142,6 @@ let Chat = function(){
 
     self.socket.on("error", function(data){
         Materialize.toast(data);
-    });
-
-    self.socket.on("stickers", function(data){
-        console.log(data);
     });
 
     document.addEventListener("scroll", function(e){

@@ -20,6 +20,10 @@ main{
     z-index: 1;
     padding-bottom: 150px;
 }
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
 #message_form{
     padding-top: 10px;
 }

@@ -17,7 +17,13 @@ UserRepository.prototype.authorize = function(login, password, next){
     "use strict";
     let Users = this;
 
-    Users.get({login: login}, "", "", "", function(err, arUsers){
+    let params = {
+        filter: {
+            login: login
+        }
+    };
+
+    Users.get(params, function(err, arUsers){
         if (err) return next(err);
 
         let user = arUsers.pop();

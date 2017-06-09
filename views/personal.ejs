@@ -8,7 +8,11 @@
             </div>
             <form action="" id="personal_form" class="col s8 offset-s2 m6 offset-m3">
                 <div class="personal_image center col s12">
-                    <img src="data:<%=user.photo_type%>;base64,<%= user.personal_photo %>" alt="">
+                    <% if (user.personal_photo) {%>
+                        <img src="data:<%=user.photo_type%>;base64,<%= user.personal_photo %>" alt="">
+                    <% } else { %>
+                        <img src="/images/no-image.png" alt="">
+                    <% } %>
                 </div>
                 <div class="input-field col s12">
                     <input id="login" type="text" name="login" value="<%=user.login%>">

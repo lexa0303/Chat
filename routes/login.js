@@ -17,6 +17,7 @@ router.post("", function(req, res, next){
 
     let form = new multiparty.Form();
 
+
     form.parse(req, function(err, fields, files) {
         if (err){
             res.statusCode = 400;
@@ -30,7 +31,7 @@ router.post("", function(req, res, next){
                 if (err) return next(err);
 
                 req.session.user = user._id;
-                res.redirect(req.get('referer'));
+                res.redirect("/personal");
             })
         }
     });

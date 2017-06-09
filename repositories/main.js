@@ -29,9 +29,21 @@ Repository.prototype.getAll = function(callback){
     query.exec(callback);
 };
 
-Repository.prototype.get = function(filter, sort, limit, offset, callback){
+Repository.prototype.get = function(params, callback){
+    if (params.filter === undefined){
+        params.filter = {};
+    }
+    if (params.sort === undefined){
+        params.sort = null;
+    }
+    if (params.limit === undefined){
+        params.limit = null;
+    }
+    if (params.offset === undefined){
+        params.offset = null;
+    }
     let model = this.model;
-    let query = model.find(filter).sort(sort).limit(limit).skip(offset);
+    let query = model.find(params.filter).sort(params.sort).limit(params.limit).skip(params.offset);
     query.exec(callback);
 };
 

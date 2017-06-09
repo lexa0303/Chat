@@ -2,14 +2,14 @@
  * Created by alex on 29.05.17.
  */
 
+const userRepository = require("../repositories/user");
 let historyRepository = require("../repositories/history");
-let clients = [];
 const emoji = require("node-emoji");
 
 let chat = function(){
     "use strict";
 
-
+    this.clients = {};
 };
 
 chat.prototype.onConnect = function(user, callback){
@@ -63,8 +63,45 @@ chat.prototype.history = function(req, res) {
         second: 'numeric'
     };
 
-    historyRepository.get(filter, {date:-1}, 20, offset, (err, data) => {
-        res.end(JSON.stringify(data));
+    let params = {
+        filter: filter,
+        sort: {
+            date: -1
+        },
+        offset: offset,
+        limit: 20
+    };
+
+    historyRepository.get(params, (err, data) => {
+        let params = {
+            filter: {
+                $or: []
+            }
+        };
+        let authors = [];
+        for (let i in data){
+            if (data.hasOwnProperty(i)) {
+                if (authors.indexOf(data[i].author) === -1){
+                    params.filter.$or.push({login: data[i].author});
+                    authors.push(data[i].author);
+                }
+            }
+        }
+
+        userRepository.get(params, (err, users) => {
+            data.forEach((item) => {
+                users.forEach((user) => {
+                    if (user.photo !== undefined &&
+                        user.photo.data !== undefined &&
+                        user.login === item.author){
+                        item.photo = new Buffer(user.photo.data).toString('base64');
+                        item.photo_type = user.photo_type;
+                    }
+                });
+            });
+
+            res.end(JSON.stringify(data));
+        });
     });
 };
 

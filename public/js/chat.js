@@ -4,6 +4,7 @@
 
 let Message = function(params, messages, lastMessage, toEnd){
     "use strict";
+    let defaultPicture = "/images/no-image.png";
 
     if (toEnd === undefined){
         toEnd = false;
@@ -18,6 +19,14 @@ let Message = function(params, messages, lastMessage, toEnd){
     let li = document.createElement('li');
     li.classList.add("collection-item");
     li.classList.add("avatar");
+    let image = document.createElement("img");
+    image.classList.add("circle");
+    if (params.photo !== undefined) {
+        image.src = `data:${params.photo_type};base64,${params.photo}`;
+    } else {
+        image.src = defaultPicture;
+    }
+    li.appendChild(image);
     let title = document.createElement("span");
     title.innerText = params.author;
     title.classList.add("title");
@@ -190,7 +199,7 @@ Chat.prototype.NewMessage = function(res, system, toEnd){
     let date = new Date(Date.parse(res.date));
 
     if (this.lastMessageDate !== undefined && date.getDay() !== this.lastMessageDate.getDay()){
-        newMessage = new DateMessage({date:this.lastMessageDate}, this.wrapper, this.lastMessage, toEnd);
+        newMessage = new DateMessage({date:date}, this.wrapper, this.lastMessage, toEnd);
         this.lastMessage = newMessage;
     }
 
@@ -198,6 +207,9 @@ Chat.prototype.NewMessage = function(res, system, toEnd){
         newMessage = new Message(res, this.wrapper, this.lastMessage, toEnd);
         this.messages.push(newMessage);
         this.newMessages.push(newMessage);
+        if (this.newMessageTime === undefined || date.getTime() > this.newMessageTime.getTime())
+            this.newMessageTime = date;
+        this.CheckNewMessages(res);
     } else {
         newMessage = new SystemMessage(res, this.wrapper, this.lastMessage, toEnd);
     }
@@ -238,6 +250,7 @@ Chat.prototype.LoadHistory = function(){
 
         let msgs = document.querySelectorAll(".collection-item");
         self.lastMessage = msgs[msgs.length - 1];
+        let lastMessageDate = self.lastMessageDate;
 
         for (let i = 0, n = res.length; i < n; i++){
             self.NewMessage(res[i], false, true);
@@ -250,8 +263,11 @@ Chat.prototype.LoadHistory = function(){
             self.lastMessage = msgs[0];
         }
 
+        self.lastMessageDate = lastMessageDate;
+
         self.historyLoading = false;
         self.loader.style.display = "none";
+        self.newMessages = [];
     };
 
     let data = {
@@ -259,8 +275,6 @@ Chat.prototype.LoadHistory = function(){
     };
 
     xhr.send(JSON.stringify(data));
-
-    self.newMessages = [];
 };
 
 Chat.prototype.Publish = function(data){
@@ -274,6 +288,8 @@ Chat.prototype.Publish = function(data){
     }
 
     this.socket.emit("message", result);
+
+    window.scrollTo(0,0);
 };
 
 let chat = new Chat();

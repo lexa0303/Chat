@@ -9,7 +9,8 @@ let historySchema = new Schema({
     globalId: Schema.Types.ObjectId,
     message: String,
     author: String,
-    date: Date
+    date: Date,
+    photo: String
 });
 
 module.exports = mongoose.model("History", historySchema);

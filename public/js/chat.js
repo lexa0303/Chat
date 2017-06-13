@@ -174,7 +174,7 @@ let Chat = function(){
         e.preventDefault();
         let data = new FormData(this);
 
-        chat.Publish(data);
+        self.Publish(data);
 
         this.elements.message.value = "";
         return false;
@@ -292,4 +292,8 @@ Chat.prototype.Publish = function(data){
     window.scrollTo(0,0);
 };
 
-let chat = new Chat();
+let chat;
+window.onload = function(){
+    "use strict";
+    chat = new Chat();
+};

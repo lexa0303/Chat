@@ -14,8 +14,15 @@ let chat = function(){
 
 chat.prototype.onConnect = function(user, callback){
     "use strict";
+    this.clients[user.login] = user;
+    callback(this.clients);
+};
 
-
+chat.prototype.onDisconnect = function(user, callback){
+    "use strict";
+    this.clients[user.login] = null;
+    delete this.clients[user.login];
+    callback(this.clients);
 };
 
 chat.prototype.subscribe = function(req,res) {
@@ -91,16 +98,13 @@ chat.prototype.history = function(req, res) {
         userRepository.get(params, (err, users) => {
             data.forEach((item) => {
                 users.forEach((user) => {
-                    if (user.photo !== undefined &&
-                        user.photo.data !== undefined &&
-                        user.login === item.author){
-                        item.photo = new Buffer(user.photo.data).toString('base64');
-                        item.photo_type = user.photo_type;
+                    if (user.photo !== undefined && user.login === item.author){
+                        item.photo = user.photo;
                     }
                 });
             });
 
-            res.end(JSON.stringify(data));
+            res.send(JSON.stringify(data));
         });
     });
 };

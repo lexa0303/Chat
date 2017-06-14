@@ -4,7 +4,7 @@
 
 let Repository = require('./main');
 let User = require('../schemas/user');
-let fs = require('fs');
+let fs = require('fs-extra');
 
 function UserRepository() {
     Repository.prototype.constructor.call(this);
@@ -52,7 +52,7 @@ UserRepository.prototype.edit = function(userId, fields, files, callback){
     Users.getById(userId, function(err, user){
         if (err) return callback(err);
 
-        let oldUser = user;
+        let oldUser = Object.assign(user);
 
         for (let i in fields){
             if (fields.hasOwnProperty(i)){
@@ -68,27 +68,29 @@ UserRepository.prototype.edit = function(userId, fields, files, callback){
 
         for (let i in files){
             if (files.hasOwnProperty(i)){
-                if (user[i] !== undefined){
-                    let file;
-                    if (typeof files[i] === 'object'){
-                        file = files[i].pop();
-                    } else {
-                        file = files[i];
-                    }
+                let file;
+                if (typeof files[i] === 'object'){
+                    file = files[i].pop();
+                } else {
+                    file = files[i];
+                }
 
-                    if (file.originalFilename) {
-                        user.photo.data = fs.readFileSync(file.path);
-                        user.photo_name = file.originalFilename;
-                        user.photo_type = file.headers['content-type'];
+                if (file.originalFilename) {
+                    let newFilePath = "/upload/" + file.originalFilename;
+                    fs.copySync(
+                        file.path,
+                        "./public" + newFilePath
+                    );
+                    if (newFilePath !== oldUser[i]) {
+                        fs.remove("./public" + oldUser[i]);
                     }
+                    user[i] = newFilePath;
                 }
             }
         }
-
         Users.update(userId, user);
+        callback(null);
     });
-
-    callback(null);
 };
 
 module.exports = new UserRepository();

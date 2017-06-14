@@ -89,11 +89,11 @@ module.exports = function(server) {
 
         let user = socket.request.user;
 
-        chat.onConnect(user, function(){
-
+        chat.onConnect(user, function(clients){
+            socket.broadcast.emit("join", {user: user.login, date: new Date()});
+            socket.broadcast.emit("clients", clients);
+            socket.emit("clients", clients);
         });
-
-        socket.broadcast.emit("join", {user: user.login, date: new Date()});
 
         socket.on("message", function (fields) {
             chat.publish(fields, user, function(result){
@@ -104,6 +104,10 @@ module.exports = function(server) {
 
         socket.on("disconnect", function(){
             socket.broadcast.emit("leave", {user: user.login, date: new Date()});
+            chat.onDisconnect(user, function(clients){
+                socket.broadcast.emit("clients", clients);
+                socket.emit("clients", clients);
+            });
         });
     });
 

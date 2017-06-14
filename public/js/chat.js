@@ -22,7 +22,7 @@ let Message = function(params, messages, lastMessage, toEnd){
     let image = document.createElement("img");
     image.classList.add("circle");
     if (params.photo !== undefined) {
-        image.src = `data:${params.photo_type};base64,${params.photo}`;
+        image.src = params.photo;
     } else {
         image.src = defaultPicture;
     }
@@ -128,20 +128,19 @@ let Chat = function(){
 
     self.socket.on("message", function(data){
         "use strict";
+        if (self.clients[data.author].photo !== undefined){
+            data.photo = self.clients[data.author].photo;
+        }
         self.NewMessage(data);
+    });
+
+    self.socket.on("clients", (clients) => {
+        self.clients = clients;
     });
 
     self.socket.on("join", function(data){
         let message = `${data.user} входит в чат`;
         self.NewMessage({message: message, date: data.date}, true);
-        let newClient = {
-            login: data.user,
-            photo: {
-                src: data.photo,
-                type: data.photo_type
-            }
-        };
-        self.clients[newClient.login] = newClient;
     });
 
     self.socket.on("leave", function(data){

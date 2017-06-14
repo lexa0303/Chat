@@ -11,7 +11,7 @@ document.querySelector("#personal_form").addEventListener("submit", function(e){
     let data = new FormData(this);
 
     xhr.onload = function(res){
-        console.log(res);
+        location.reload();
     };
 
     xhr.send(data);

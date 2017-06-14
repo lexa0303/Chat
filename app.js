@@ -50,9 +50,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'), {
-    maxage: '3600'
-}));
-app.use(express.static(path.join(__dirname, 'upload'), {
     maxage: '3600000'
 }));
 

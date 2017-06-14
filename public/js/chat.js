@@ -128,7 +128,7 @@ let Chat = function(){
 
     self.socket.on("message", function(data){
         "use strict";
-        if (self.clients[data.author].photo !== undefined){
+        if (self.clients[data.author] !== undefined && self.clients[data.author].photo !== undefined){
             data.photo = self.clients[data.author].photo;
         }
         self.NewMessage(data);
@@ -295,4 +295,5 @@ let chat;
 window.onload = function(){
     "use strict";
     chat = new Chat();
+    document.querySelector(".stickers_wrap").style.opacity = 1;
 };

@@ -48,3 +48,4 @@ fabric.properties
 .idea/
 /upload/
 /public/upload/
+/cache/

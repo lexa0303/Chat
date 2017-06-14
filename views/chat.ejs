@@ -22,15 +22,20 @@
             <form action="" id="message_form">
                 <div class="col s12">
                     <div class="input-field col s12">
-                        <input class="validate" required type="text" name="message" id="message">
+                        <input class="validate"
+                               autocomplete="false"
+                               required
+                               type="text"
+                               name="message"
+                               id="message">
                         <label for="message">Message</label>
                     </div>
-                    <div class="col m2 s4">
+                    <div class="col m2 s5">
                         <button class="btn" type="submit">Send
                             <i class="material-icons right">send</i>
                         </button>
                     </div>
-                    <div class="col m10 s8">
+                    <div class="col m10 s7">
                         <div class="stickers_wrap">
                             <% for (var i in emoji){
                                 if (emoji.hasOwnProperty(i)){%>
